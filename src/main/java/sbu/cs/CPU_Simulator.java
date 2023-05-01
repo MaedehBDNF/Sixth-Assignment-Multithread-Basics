@@ -23,16 +23,21 @@ public class CPU_Simulator
         long processingTime;
         String ID;
         public Task(String ID, long processingTime) {
-        // TODO
+            this.ID = ID;
+            this.processingTime = processingTime;
         }
 
-    /*
-        Simulate running a task by utilizing the sleep method for the duration of
-        the task's processingTime. The processing time is given in milliseconds.
-    */
+        /*
+            Simulate running a task by utilizing the sleep method for the duration of
+            the task's processingTime. The processing time is given in milliseconds.
+        */
         @Override
         public void run() {
-        // TODO
+            try {
+                Thread.sleep(processingTime);
+            } catch (InterruptedException interruptedException) {
+                System.out.println(interruptedException.getMessage());
+            }
         }
     }
 
