@@ -74,10 +74,27 @@ public class UseInterrupts
         }
     }
 
-/*
-    You can add new code to the main function. This is where you must utilize interrupts.
-    No existing line of code should be changed or deleted.
- */
+    public static class TimerThread extends Thread {
+        long sleepTime; // in milli seconds
+        public TimerThread(long sleepTime) {
+            super();
+            this.sleepTime = sleepTime;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(this.sleepTime);
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
+        }
+    }
+
+    /*
+        You can add new code to the main function. This is where you must utilize interrupts.
+        No existing line of code should be changed or deleted.
+     */
     public static void main(String[] args) {
         SleepThread sleepThread = new SleepThread(5);
         sleepThread.start();
