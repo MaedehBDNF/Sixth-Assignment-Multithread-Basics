@@ -21,6 +21,7 @@ package sbu.cs;
 
 public class FindMultiples
 {
+    public static int sum = 0;
 
     public static class MultipleChecker implements Runnable{
         int number;
