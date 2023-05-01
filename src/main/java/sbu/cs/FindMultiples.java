@@ -22,8 +22,24 @@ package sbu.cs;
 public class FindMultiples
 {
 
-    // TODO create the required multithreading class/classes using your preferred method.
+    public static class MultipleChecker implements Runnable{
+        int number;
+        Lock lock;
 
+        public MultipleChecker(int number, Lock lock){
+            this.number = number;
+            this.lock = lock;
+        }
+
+        @Override
+        public void run(){
+            if (number % 3 == 0 || number % 5 == 0 || number % 7 == 0){
+                lock.lock();
+                sum += number;
+                lock.unlock();
+            }
+        }
+    }
 
     /*
     The getSum function should be called at the start of your program.
