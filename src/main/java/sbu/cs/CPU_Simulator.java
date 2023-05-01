@@ -49,9 +49,20 @@ public class CPU_Simulator
     public ArrayList<String> startSimulation(ArrayList<Task> tasks) {
         ArrayList<String> executedTasks = new ArrayList<>();
 
-        // TODO
+        sortTasks(tasks);
 
         return executedTasks;
+    }
+
+    private void sortTasks(ArrayList<Task> tasks){
+        int n = tasks.size();
+        for (int i = 0; i < n - 1; i++)
+            for (int j = 0; j < n - i - 1; j++)
+                if (tasks.get(j).processingTime > tasks.get(j + 1).processingTime) {
+                    Task temp = tasks.get(j);
+                    tasks.set(j, tasks.get(j+1));
+                    tasks.set(j+1, temp);
+                }
     }
 
     public static void main(String[] args) {
