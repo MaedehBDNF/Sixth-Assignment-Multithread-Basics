@@ -12,13 +12,7 @@ package sbu.cs;
 
 public class UseInterrupts
 {
-/*
-    TODO
-     Analyse the following class and add new code where necessary.
-     If an object from this type of thread is Interrupted, it must print this:
-        "{ThreadName} has been interrupted"
-     And then terminate itself.
- */
+
     public static class SleepThread extends Thread {
         int sleepCounter;
 
@@ -33,6 +27,9 @@ public class UseInterrupts
 
             while (this.sleepCounter > 0)
             {
+                if (Thread.interrupted()) {
+                    break;
+                }
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -47,14 +44,6 @@ public class UseInterrupts
         }
     }
 
-/*
-    TODO
-     Analyse the following class and add new code where necessary.
-     If an object from this type of thread is Interrupted, it must print this:
-        "{ThreadName} has been interrupted"
-     And then terminate itself.
-     (Hint: Use the isInterrupted() method)
- */
     public static class LoopThread extends Thread {
         int value;
         public LoopThread(int value) {
@@ -68,26 +57,68 @@ public class UseInterrupts
 
             for (int i = 0; i < 10; i += 3)
             {
+                if (Thread.interrupted()) {
+                    break;
+                }
                 i -= this.value;
 
             }
         }
     }
 
-/*
-    You can add new code to the main function. This is where you must utilize interrupts.
-    No existing line of code should be changed or deleted.
- */
+    public static class TimerThread extends Thread {
+        long sleepTime; // in milli seconds
+        public TimerThread(long sleepTime) {
+            super();
+            this.sleepTime = sleepTime;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(this.sleepTime);
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
+        }
+    }
+
+    /*
+        You can add new code to the main function. This is where you must utilize interrupts.
+        No existing line of code should be changed or deleted.
+     */
     public static void main(String[] args) {
         SleepThread sleepThread = new SleepThread(5);
         sleepThread.start();
 
-        // TODO  Check if this thread runs for longer than 3 seconds (if it does, interrupt it)
+        TimerThread timerThread = new TimerThread(3000);
+        timerThread.start();
+        try {
+            timerThread.join();
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
+        } finally {
+            if (sleepThread.isAlive()) {
+                sleepThread.interrupt();
+                System.out.println(sleepThread.getName() + " has been interrupted");
+            }
+        }
+
 
         LoopThread loopThread = new LoopThread(3);
         loopThread.start();
 
-        // TODO  Check if this thread runs for longer than 3 seconds (if it does, interrupt it)
-
+        TimerThread timerThread2 = new TimerThread(3000);
+        timerThread2.start();
+        try {
+            timerThread2.join();
+        } catch (InterruptedException interruptedException) {
+            interruptedException.printStackTrace();
+        } finally {
+            if (loopThread.isAlive()) {
+                loopThread.interrupt();
+                System.out.println(loopThread.getName() + " has been interrupted");
+            }
+        }
     }
 }

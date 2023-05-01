@@ -23,16 +23,21 @@ public class CPU_Simulator
         long processingTime;
         String ID;
         public Task(String ID, long processingTime) {
-        // TODO
+            this.ID = ID;
+            this.processingTime = processingTime;
         }
 
-    /*
-        Simulate running a task by utilizing the sleep method for the duration of
-        the task's processingTime. The processing time is given in milliseconds.
-    */
+        /*
+            Simulate running a task by utilizing the sleep method for the duration of
+            the task's processingTime. The processing time is given in milliseconds.
+        */
         @Override
         public void run() {
-        // TODO
+            try {
+                Thread.sleep(processingTime);
+            } catch (InterruptedException interruptedException) {
+                System.out.println(interruptedException.getMessage());
+            }
         }
     }
 
@@ -44,9 +49,39 @@ public class CPU_Simulator
     public ArrayList<String> startSimulation(ArrayList<Task> tasks) {
         ArrayList<String> executedTasks = new ArrayList<>();
 
-        // TODO
+        sortTasks(tasks);
 
+        ArrayList<Thread> threads = new ArrayList<>();
+        for (Task task: tasks) {
+            Thread t = new Thread(task);
+            t.setName(task.ID);
+            threads.add(t);
+        }
+        for (Thread thread: threads) {
+            thread.start();
+        }
+        for (Thread thread: threads) {
+            try {
+                // main thread wait until other thread execute
+                thread.join();
+                // add executed thread to list
+                executedTasks.add(thread.getName());
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
+        }
         return executedTasks;
+    }
+
+    private void sortTasks(ArrayList<Task> tasks){
+        int n = tasks.size();
+        for (int i = 0; i < n - 1; i++)
+            for (int j = 0; j < n - i - 1; j++)
+                if (tasks.get(j).processingTime > tasks.get(j + 1).processingTime) {
+                    Task temp = tasks.get(j);
+                    tasks.set(j, tasks.get(j+1));
+                    tasks.set(j+1, temp);
+                }
     }
 
     public static void main(String[] args) {
