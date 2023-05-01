@@ -51,6 +51,25 @@ public class CPU_Simulator
 
         sortTasks(tasks);
 
+        ArrayList<Thread> threads = new ArrayList<>();
+        for (Task task: tasks) {
+            Thread t = new Thread(task);
+            t.setName(task.ID);
+            threads.add(t);
+        }
+        for (Thread thread: threads) {
+            thread.start();
+        }
+        for (Thread thread: threads) {
+            try {
+                // main thread wait until other thread execute
+                thread.join();
+                // add executed thread to list
+                executedTasks.add(thread.getName());
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
+        }
         return executedTasks;
     }
 
